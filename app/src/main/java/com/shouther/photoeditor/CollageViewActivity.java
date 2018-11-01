@@ -2,11 +2,17 @@ package com.shouther.photoeditor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
 import com.jcmore2.collage.CollageView;
 import com.shouther.photoeditor.base.BaseActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +45,26 @@ public class CollageViewActivity extends BaseActivity {
 
         collage.createCollageResources(listRes);
         collage.setFixedCollage(false);
+//        collage.buildDrawingCache();
+//        Bitmap bmp = Bitmap.createBitmap(collage.getDrawingCache());
+//        Uri tempUri = getImageUri(getApplicationContext(), bmp);
+//
+//        // CALL THIS METHOD TO GET THE ACTUAL PATH
+//        File finalFile = new File(getRealPathFromURI(tempUri));
+//        System.out.print(finalFile.getAbsolutePath().toString());
 
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 }

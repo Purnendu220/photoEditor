@@ -1,54 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+xmlns:ads="http://schemas.android.com/apk/res-auto"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@mipmap/landing1"
+tools:context=".HomeActivity">
+
+<TextView
+    android:id="@+id/textViewTitle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeActivity"
-    android:background="@mipmap/landing1"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="100dp"
+    android:fontFamily="sans-serif"
+    android:gravity="center"
+    android:shadowColor="@color/text_shadow_white"
+    android:shadowDx="-2"
+    android:shadowDy="-2"
+    android:shadowRadius="1"
+    android:text="@string/HomeTitle"
+    android:textColor="@color/white"
+    android:textSize="40sp" />
+
+<LinearLayout
+    android:id="@+id/selectLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/textViewTitle"
+    android:layout_marginTop="@dimen/margin_30"
+    android:orientation="horizontal"
+    android:weightSum="3"
+
     >
-
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:shadowColor="@color/text_shadow_white"
-        android:shadowDx="-2"
-        android:shadowDy="-2"
-        android:shadowRadius="1"
-        android:text="@string/HomeTitle"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        android:layout_marginTop="100dp"
-        />
-
-   <LinearLayout
-       android:id="@+id/selectLayout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_below="@+id/textViewTitle"
-       android:layout_marginTop="@dimen/margin_30"
-       android:orientation="horizontal"
-       android:weightSum="3"
-
-       >
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_weight="1"
-
-           >
-           <ImageView
-               android:id="@+id/ImgPhoto"
-               android:layout_width="wrap_content"
-               android:layout_height="100dp"
-               android:src="@mipmap/photo"
-               android:layout_weight="1"
-               />
-       </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -56,50 +41,69 @@
         android:layout_weight="1"
 
         >
-       <ImageView
-           android:id="@+id/ImgCamera"
-           android:layout_width="wrap_content"
-           android:layout_height="100dp"
-           android:src="@mipmap/camera"
-           android:layout_weight="1"
 
-           />
+        <ImageView
+            android:id="@+id/ImgPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:src="@mipmap/photo" />
     </LinearLayout>
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_weight="1"
-           >
-           <ImageView
-               android:id="@+id/ImgCollage"
-               android:layout_width="wrap_content"
-               android:layout_height="100dp"
-               android:src="@mipmap/collage"
-               android:layout_weight="1"
 
-               />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
 
-       </LinearLayout>
+        >
 
+        <ImageView
+            android:id="@+id/ImgCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:src="@mipmap/camera"
 
+            />
+    </LinearLayout>
 
-   </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
-    <ImageView
-        android:id="@+id/ImgSelectedImage"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:src="@mipmap/img_missing"
-        android:layout_below="@+id/selectLayout"
-        android:scaleType="centerCrop"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
+        <ImageView
+            android:id="@+id/ImgCollage"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:src="@mipmap/collage"
 
-        />
+            />
 
-
-
-
+    </LinearLayout>
 
 
+</LinearLayout>
+
+<ImageView
+    android:id="@+id/ImgSelectedImage"
+    android:layout_width="300dp"
+    android:layout_height="250dp"
+    android:layout_below="@+id/selectLayout"
+    android:layout_centerHorizontal="true"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/img_missing"
+    android:visibility="gone"
+
+    />
+
+<com.google.android.gms.ads.AdView
+    android:id="@+id/adView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    ads:adSize="BANNER"
+    ads:adUnitId="@string/banner_home_footer_test"></com.google.android.gms.ads.AdView>
 </RelativeLayout>
