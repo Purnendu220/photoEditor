@@ -109,7 +109,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         super.onCreate(savedInstanceState);
         makeFullScreen();
         setContentView(R.layout.activity_edit_image);
-
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mInterstitialAd = new InterstitialAd(this);
         initViews();
 
         mWonderFont = Typeface.createFromAsset(getAssets(), "beyond_wonderland.ttf");
@@ -154,9 +155,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
             }
         }
-        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-        mInterstitialAd = new InterstitialAd(this);
-
         // set the ad unit ID
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen_test));
 

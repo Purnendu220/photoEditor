@@ -38,7 +38,7 @@ public class ActionItemViewHolder extends RecyclerView.ViewHolder {
             ActionItemData actionData= (ActionItemData) data;
             ImgNewBitmap.setImageResource(actionData.getImageResourceId());
             textViewItemName.setText(actionData.getItemName());
-            itemView.setOnClickListener(new View.OnClickListener() {
+            cardViewItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapterCallbacks.onAdapterItemClick(ActionItemViewHolder.this, itemView, data, position);
