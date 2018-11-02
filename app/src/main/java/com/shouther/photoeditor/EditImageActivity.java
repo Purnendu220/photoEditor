@@ -145,6 +145,15 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         mPhotoEditor.clearAllViews();
         if(mSelectedfilePath!=null && !mSelectedfilePath.isEmpty()){
         mPhotoEditorView.getSource().setImageBitmap(fileToBitmap(mSelectedfilePath));
+            return;
+        }
+        if(mSelectedColorOfBitmap!=null){
+            Bitmap bitmap=createImage(800,1280,mSelectedColorOfBitmap);
+            if(bitmap!=null){
+                mPhotoEditorView.getSource().setImageBitmap(bitmap);
+
+            }
+        }
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mInterstitialAd = new InterstitialAd(this);
 
@@ -192,15 +201,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 Toast.makeText(EditImageActivity.this, "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
                         rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
             }
-        return;
-        }
-        if(mSelectedColorOfBitmap!=null){
-            Bitmap bitmap=createImage(800,1280,mSelectedColorOfBitmap);
-            if(bitmap!=null){
-                mPhotoEditorView.getSource().setImageBitmap(bitmap);
 
-            }
-        }
+
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
