@@ -30,7 +30,15 @@ import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.shouther.photoeditor.base.BaseActivity;
 import com.shouther.photoeditor.filters.FilterListener;
 import com.shouther.photoeditor.filters.FilterViewAdapter;
@@ -56,7 +64,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         EmojiBSFragment.EmojiListener,
         StickerBSFragment.StickerListener, EditingToolsAdapter.OnItemSelected, FilterListener {
     private int clickedId;
-
+    private RewardedVideoAd mRewardedVideoAd;
     public static void show(Context context, String mSelectedFilePath) {
         Intent intent = new Intent(context, EditImageActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
@@ -94,6 +102,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private String mSelectedfilePath;
     private Integer mSelectedColorOfBitmap;
 
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +145,53 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         mPhotoEditor.clearAllViews();
         if(mSelectedfilePath!=null && !mSelectedfilePath.isEmpty()){
         mPhotoEditorView.getSource().setImageBitmap(fileToBitmap(mSelectedfilePath));
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mInterstitialAd = new InterstitialAd(this);
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen_test));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                // Check the LogCat to get your test device ID
+                .addTestDevice("508759325B5A5CE39EF96B111271B496")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+
+            @Override
+            public void onAdClosed() {
+                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+                Toast.makeText(EditImageActivity.this, "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
+                        rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
+            }
         return;
         }
         if(mSelectedColorOfBitmap!=null){
@@ -146,6 +202,82 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
             }
         }
 
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLeftApplication",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int errorCode) {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoAdLoaded() {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+                if (mRewardedVideoAd.isLoaded()) {
+                    mRewardedVideoAd.show();
+                }
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+                Toast.makeText(EditImageActivity.this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd(getString(R.string.rewarded_video_test),
+                new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        // Check the LogCat to get your test device ID
+                        .addTestDevice("508759325B5A5CE39EF96B111271B496").build());
+
+        // showing the ad to user
+        showRewardedVideo();
+    }
+
+    private void showRewardedVideo() {
+        // make sure the ad is loaded completely before showing it
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        mRewardedVideoAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mRewardedVideoAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mRewardedVideoAd.destroy(this);
+        super.onDestroy();
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     private void initViews() {
@@ -233,6 +365,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 break;
 
             case R.id.imgSave:
+                loadRewardedVideoAd();
                 saveImage();
                 break;
 
@@ -268,6 +401,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
     @SuppressLint("MissingPermission")
     private void saveImage() {
+
+
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showLoading("Saving...");
             File file = new File(Environment.getExternalStorageDirectory()

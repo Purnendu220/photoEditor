@@ -19,9 +19,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.shouther.photoeditor.adapter.ActionItemAdapter;
 import com.shouther.photoeditor.adapter.AdapterCallbacks;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.shouther.photoeditor.base.BaseActivity;
 import com.shouther.photoeditor.customDialogs.createOneColorBitmap;
 import com.shouther.photoeditor.data.ActionItemData;
@@ -60,6 +65,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @BindView(R.id.ImgSelectedImage)
     ImageView mImgSelectedImage;
+
+    @BindView(R.id.adView)
+    AdView mAdView;
 
     @BindView(R.id.ImgNewBitmap)
     ImageView mImgNewBitmap;
@@ -107,7 +115,49 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mActionItemAdapter.addAllData(actionItemList);
 
 
+//        mAdView.setAdSize(AdSize.BANNER);
+//        mAdView.setAdUnitId(getString(R.string.banner_home_footer));
+
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                // Check the LogCat to get your test device ID
+                .addTestDevice("508759325B5A5CE39EF96B111271B496")
+                .build();
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdClosed() {
+                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+        });
+
+        mAdView.loadAd(adRequest);
+
+
     }
+
+
+
 
     private void setListeners(){
         mImgCamera.setOnClickListener(this);
@@ -287,6 +337,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override

@@ -35,6 +35,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'ja.burhanrashid52:photoeditor:0.3.3'
     implementation 'com.jcmore2.collage:collage:1.0.0'
+    implementation 'com.google.android.gms:play-services-ads:11.8.0'
 
 
 
