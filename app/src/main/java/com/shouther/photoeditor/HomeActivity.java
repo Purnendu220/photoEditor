@@ -385,8 +385,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
 
-                case 3:
-                CollageViewActivity.open(mContext);
+                case 5:
+                //CollageViewActivity.open(mContext);
+                    final String appPackageName = getPackageName(); // package name of the app
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
                 break;
             case 4:
                 createOneColorBitmap mCustomThankyouDialog = new createOneColorBitmap(mContext);
@@ -396,7 +402,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     e.printStackTrace();
                 }
                 break;
-            case 5:
+            case 6:
 
                 break;
 
