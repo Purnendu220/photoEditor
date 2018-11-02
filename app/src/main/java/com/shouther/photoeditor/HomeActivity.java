@@ -13,23 +13,34 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.shouther.photoeditor.adapter.ActionItemAdapter;
+import com.shouther.photoeditor.adapter.AdapterCallbacks;
 import com.shouther.photoeditor.base.BaseActivity;
+import com.shouther.photoeditor.customDialogs.createOneColorBitmap;
+import com.shouther.photoeditor.data.ActionItemData;
+import com.shouther.photoeditor.utils.GridSpacingItemDecoration;
 import com.shouther.photoeditor.utils.PathUtil;
+import com.shouther.photoeditor.utils.VerticalSpaceItemDecoration;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener, AdapterCallbacks<ActionItemData> {
     public static void open(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -50,8 +61,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.ImgSelectedImage)
     ImageView mImgSelectedImage;
 
+    @BindView(R.id.ImgNewBitmap)
+    ImageView mImgNewBitmap;
+
+    @BindView(R.id.actionItemRecyclerView)
+    RecyclerView actionItemRecyclerView;
+
     public Context mContext;
     private int clickedId=0;
+
+    private ActionItemAdapter mActionItemAdapter;
+
+    private ArrayList actionItemList= new ArrayList<ActionItemData>();
+
 
 
     @Override
@@ -61,12 +83,37 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mContext=this;
         ButterKnife.bind(this);
         setListeners();
+        actionItemRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        actionItemRecyclerView.setHasFixedSize(false);
+
+        try {
+            actionItemRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(50));
+
+            ((SimpleItemAnimator) actionItemRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mActionItemAdapter = new ActionItemAdapter(mContext, false, this);
+        actionItemRecyclerView.setAdapter(mActionItemAdapter);
+        createActionItemList();
+
+    }
+    private void createActionItemList(){
+        actionItemList.add(new ActionItemData("Take From Gallery",1,R.mipmap.photo));
+        actionItemList.add(new ActionItemData("Take From Camera",2,R.mipmap.camera));
+        actionItemList.add(new ActionItemData("Create Empty Image",4,R.mipmap.photo));
+        actionItemList.add(new ActionItemData("Rate Our App",5,R.mipmap.collage));
+        mActionItemAdapter.addAllData(actionItemList);
+
+
     }
 
     private void setListeners(){
         mImgCamera.setOnClickListener(this);
         mImgPhoto.setOnClickListener(this);
         mImgCollage.setOnClickListener(this);
+        mImgNewBitmap.setOnClickListener(this);
     }
 
     @Override
@@ -95,6 +142,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ImgCollage:
                 CollageViewActivity.open(mContext);
                 break;
+            case R.id.ImgNewBitmap:
+                createOneColorBitmap mCustomThankyouDialog = new createOneColorBitmap(mContext);
+                try {
+                    mCustomThankyouDialog.show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+
 
         }
 
@@ -231,5 +287,59 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    @Override
+    public void onAdapterItemClick(RecyclerView.ViewHolder viewHolder, View view, ActionItemData model, int position) {
+        switch (model.getItemResourceId()){
+            case 1:
+                if (requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
+                }
+                else{
+                    clickedId= R.id.ImgPhoto;
+                }
+                break;
+            case 2:
+                if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    openCameraIntent();
+                }
+                else{
+                    clickedId= R.id.ImgCamera;
+                }
+                break;
+
+                case 3:
+                CollageViewActivity.open(mContext);
+                break;
+            case 4:
+                createOneColorBitmap mCustomThankyouDialog = new createOneColorBitmap(mContext);
+                try {
+                    mCustomThankyouDialog.show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case 5:
+
+                break;
+
+
+        }
+
+
+    }
+
+    @Override
+    public void onAdapterItemLongClick(RecyclerView.ViewHolder viewHolder, View view, ActionItemData model, int position) {
+
+    }
+
+    @Override
+    public void onShowLastItem() {
+
     }
 }

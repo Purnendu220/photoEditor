@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -62,9 +64,18 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         intent.putExtra(EXTRA_IMAGE_PATHS, mSelectedFilePath);
         context.startActivity(intent);
     }
+    public static void show(Context context, int colorOfBitmap) {
+        Intent intent = new Intent(context, EditImageActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(EXTRA_BITMAP_COLOR, colorOfBitmap);
+        context.startActivity(intent);
+    }
 
     private static final String TAG = EditImageActivity.class.getSimpleName();
     public static final String EXTRA_IMAGE_PATHS = "extra_image_paths";
+    public static final String EXTRA_BITMAP_COLOR = "extra_bitmap_color";
+
     private static final int CAMERA_REQUEST = 52;
     private static final int PICK_REQUEST = 53;
     private PhotoEditor mPhotoEditor;
@@ -81,6 +92,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private ConstraintSet mConstraintSet = new ConstraintSet();
     private boolean mIsFilterVisible;
     private String mSelectedfilePath;
+    private Integer mSelectedColorOfBitmap;
 
 
     @Override
@@ -118,10 +130,21 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 .build(); // build photo editor sdk
         if(getIntent()!=null){
             mSelectedfilePath = getIntent().getStringExtra(EXTRA_IMAGE_PATHS);
+            mSelectedColorOfBitmap = getIntent().getIntExtra(EXTRA_BITMAP_COLOR,0);
         }
         mPhotoEditor.setOnPhotoEditorListener(this);
         mPhotoEditor.clearAllViews();
+        if(mSelectedfilePath!=null && !mSelectedfilePath.isEmpty()){
         mPhotoEditorView.getSource().setImageBitmap(fileToBitmap(mSelectedfilePath));
+        return;
+        }
+        if(mSelectedColorOfBitmap!=null){
+            Bitmap bitmap=createImage(800,1280,mSelectedColorOfBitmap);
+            if(bitmap!=null){
+                mPhotoEditorView.getSource().setImageBitmap(bitmap);
+
+            }
+        }
 
     }
 
@@ -550,5 +573,13 @@ try{
 
         imageFilePath = image.getAbsolutePath();
         return image;
+    }
+    private  Bitmap createImage(int width, int height, int color) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
+        return bitmap;
     }
 }

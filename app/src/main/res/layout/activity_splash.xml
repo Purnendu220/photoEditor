@@ -5,16 +5,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Splash">
+    tools:context=".Splash"
+    android:background="@color/colorPrimary"
+    >
 
-    <ImageView
-        android:id="@+id/imageViewImage"
+    <com.shouther.photoeditor.splashview.ParticleView
+        android:id="@+id/app_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/landing2"
-        android:scaleType="fitXY"
-        />
+        android:background="@color/float_transparent"
+        app:pv_background_color="@color/colorPrimary"
+        app:pv_host_text="Photo"
+        app:pv_particle_text="Editor"
+        app:pv_particle_text_size="24sp"
+        app:pv_host_text_size="48sp"
 
+        app:pv_text_color="@color/white"
+        app:pv_text_anim_time="2000"
+        app:pv_spread_anim_time="1000"
+        app:pv_host_text_anim_time="2000"
+
+        />
 
 
 

@@ -1,11 +1,14 @@
 package com.shouther.photoeditor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
+
+import com.shouther.photoeditor.splashview.ParticleView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,8 +19,11 @@ public class Splash extends AppCompatActivity {
     private Runnable nextScreenRunnable;
     private long DELAY_NAVIGATION = 1400; // 1.4 sec
 
-    @BindView(R.id.imageViewImage)
-    public ImageView imageViewImage;
+//    @BindView(R.id.imageViewImage)
+//    public ImageView imageViewImage;
+
+    @BindView(R.id.app_name)
+    ParticleView mParticleView;
 
     public Context mContext;
 
@@ -28,8 +34,16 @@ public class Splash extends AppCompatActivity {
         mContext=this;
         ButterKnife.bind(this);
         handler = new Handler();
-        imageViewImage.animate().scaleXBy(0.3f).scaleYBy(0.3f).setDuration(1000).setInterpolator(new BounceInterpolator()).start();
-        startTimerForGoToNextScreen();
+        //imageViewImage.animate().scaleXBy(0.3f).scaleYBy(0.3f).setDuration(1000).setInterpolator(new BounceInterpolator()).start();
+        mParticleView.startAnim();
+        mParticleView.setOnParticleAnimListener(new ParticleView.ParticleAnimListener() {
+            @Override
+            public void onAnimationEnd() {
+                HomeActivity.open(mContext);
+                finish();
+            }
+        });
+       // startTimerForGoToNextScreen();
         }
 
     private void startTimerForGoToNextScreen() {
