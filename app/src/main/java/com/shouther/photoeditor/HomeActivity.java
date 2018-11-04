@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.shouther.photoeditor.adapter.ActionItemAdapter;
 import com.shouther.photoeditor.adapter.AdapterCallbacks;
 import com.google.android.gms.ads.AdListener;
@@ -54,23 +55,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
     private static final int CAMERA_REQUEST = 52;
     private static final int PICK_REQUEST = 53;
-    @BindView(R.id.ImgCamera)
-    ImageView mImgCamera;
 
-    @BindView(R.id.ImgPhoto)
-    ImageView mImgPhoto;
 
-    @BindView(R.id.ImgCollage)
-    ImageView mImgCollage;
 
-    @BindView(R.id.ImgSelectedImage)
-    ImageView mImgSelectedImage;
 
     @BindView(R.id.adView)
     AdView mAdView;
 
-    @BindView(R.id.ImgNewBitmap)
-    ImageView mImgNewBitmap;
+
 
     @BindView(R.id.actionItemRecyclerView)
     RecyclerView actionItemRecyclerView;
@@ -105,17 +97,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mActionItemAdapter = new ActionItemAdapter(mContext, false, this);
         actionItemRecyclerView.setAdapter(mActionItemAdapter);
         createActionItemList();
+        loadAds();
 
     }
-    private void createActionItemList(){
-        actionItemList.add(new ActionItemData("Take From Gallery",1,R.mipmap.photo));
-        actionItemList.add(new ActionItemData("Take From Camera",2,R.mipmap.camera));
-        actionItemList.add(new ActionItemData("Create Empty Image",4,R.mipmap.photo));
-        actionItemList.add(new ActionItemData("Rate Our App",5,R.mipmap.collage));
-        mActionItemAdapter.addAllData(actionItemList);
 
-
-//        mAdView.setAdSize(AdSize.BANNER);
+    private void loadAds(){
+       //        mAdView.setAdSize(AdSize.LARGE_BANNER);
 //        mAdView.setAdUnitId(getString(R.string.banner_home_footer));
 
         AdRequest adRequest = new AdRequest.Builder()
@@ -127,22 +114,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdClosed() {
-                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -152,6 +139,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         });
 
         mAdView.loadAd(adRequest);
+    }
+    private void createActionItemList(){
+        actionItemList.add(new ActionItemData("Take From Gallery",1,R.mipmap.ic_camera));
+        actionItemList.add(new ActionItemData("Take From Camera",2,R.mipmap.ic_camera));
+        actionItemList.add(new ActionItemData("Create Empty Image",4,R.mipmap.ic_camera));
+        actionItemList.add(new ActionItemData("Recently Edited Images",6,R.mipmap.ic_camera));
+        actionItemList.add(new ActionItemData("Rate Our App",5,R.mipmap.ic_camera));
+        mActionItemAdapter.addAllData(actionItemList);
+
+
+
 
 
     }
@@ -160,46 +158,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void setListeners(){
-        mImgCamera.setOnClickListener(this);
-        mImgPhoto.setOnClickListener(this);
-        mImgCollage.setOnClickListener(this);
-        mImgNewBitmap.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ImgCamera:
-                if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    openCameraIntent();
-                }
-                else{
-                    clickedId= R.id.ImgCamera;
-                }
-                break;
 
-            case R.id.ImgPhoto:
-                if (requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
-                }
-                else{
-                    clickedId= R.id.ImgPhoto;
-                }
-                break;
-            case R.id.ImgCollage:
-                CollageViewActivity.open(mContext);
-                break;
-            case R.id.ImgNewBitmap:
-                createOneColorBitmap mCustomThankyouDialog = new createOneColorBitmap(mContext);
-                try {
-                    mCustomThankyouDialog.show();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                break;
 
 
         }
@@ -209,10 +174,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     public void isPermissionGranted(boolean isGranted, String permission) {
         if (isGranted) {
         switch (clickedId){
-            case R.id.ImgCamera:
+            case 2:
                 openCameraIntent();
                 break;
-            case R.id.ImgPhoto:
+            case 1:
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -233,8 +198,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 case CAMERA_REQUEST:
                     try{
                         EditImageActivity.show(mContext,imageFilePath);
-                        Bitmap bitmap=fileToBitmap();
-                        mImgSelectedImage.setImageBitmap(bitmap);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -373,7 +336,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
                 }
                 else{
-                    clickedId= R.id.ImgPhoto;
+                    clickedId= 1;
                 }
                 break;
             case 2:
@@ -381,7 +344,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     openCameraIntent();
                 }
                 else{
-                    clickedId= R.id.ImgCamera;
+                    clickedId=2;
                 }
                 break;
 
@@ -403,7 +366,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
             case 6:
-
+                GetAllRecentFiles.show(mContext);
                 break;
 
 

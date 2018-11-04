@@ -53,6 +53,7 @@ public class ActionItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void addAllData(List<ActionItemData> models) {
+        clearAll();
         list.addAll(models);
         addLoader();
     }

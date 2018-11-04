@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 
+import com.google.android.gms.ads.MobileAds;
 import com.shouther.photoeditor.splashview.ParticleView;
 
 import butterknife.BindView;
@@ -33,6 +34,8 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mContext=this;
         ButterKnife.bind(this);
+        MobileAds.initialize(this, mContext.getString(R.string.admob_app_id));
+
         handler = new Handler();
         //imageViewImage.animate().scaleXBy(0.3f).scaleYBy(0.3f).setDuration(1000).setInterpolator(new BounceInterpolator()).start();
         mParticleView.startAnim();

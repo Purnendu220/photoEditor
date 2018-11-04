@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shouther.photoeditor.EditImageActivity;
 import com.shouther.photoeditor.R;
 import com.shouther.photoeditor.utils.VerticalSlideColorPicker;
@@ -35,6 +38,8 @@ public class createOneColorBitmap extends Dialog implements View.OnClickListener
 
     @BindView(R.id.okButton)
     Button okButton;
+    @BindView(R.id.adView)
+    AdView mAdView;
 
     int selectedColorForBitmap;
 
@@ -62,8 +67,46 @@ public class createOneColorBitmap extends Dialog implements View.OnClickListener
         getWindow().setAttributes(lp);
         setListeners();
         selectedColorForBitmap=Color.parseColor("#ffffff");
+        setUpAdsView();
 
 
+    }
+
+    private void setUpAdsView() {
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                // Check the LogCat to get your test device ID
+                .addTestDevice("508759325B5A5CE39EF96B111271B496")
+                .build();
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Toast.makeText(getApplicationContext(), "Ad is loaded!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdClosed() {
+                //Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                //Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                //Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+        });
+
+        mAdView.loadAd(adRequest);
     }
 
     private void setListeners(){
@@ -93,6 +136,7 @@ public class createOneColorBitmap extends Dialog implements View.OnClickListener
                 break;
             case R.id.okButton:
                 EditImageActivity.show(mContext,selectedColorForBitmap);
+                dismiss();
 
                 break;
         }

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:colorpicker="http://schemas.android.com/tools"
     android:gravity="center"
     android:background="@color/float_transparent">
@@ -132,6 +132,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@+id/linearLayoutMain"
+
             >
 
             <Button
@@ -140,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@android:string/cancel"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 />
 
             <Button
@@ -149,9 +150,21 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Create"
-                style="?android:attr/buttonBarButtonStyle"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 />
         </LinearLayout>
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_home_footer_test"
+            android:layout_below="@+id/buttonbar"
+
+            >
+
+        </com.google.android.gms.ads.AdView>
     </RelativeLayout>
 
 </RelativeLayout>

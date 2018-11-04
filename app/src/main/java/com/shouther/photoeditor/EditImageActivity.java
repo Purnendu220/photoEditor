@@ -173,22 +173,22 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
             @Override
             public void onAdClosed() {
-                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdOpened() {
-                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -196,31 +196,36 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
             @Override
             public void onRewarded(RewardItem rewardItem) {
-                Toast.makeText(EditImageActivity.this, "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
-                        rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditImageActivity.this, "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
+                 //       rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
             }
 
 
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLeftApplication",
-                        Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLeftApplication",
+                       // Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRewardedVideoAdClosed() {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditImageActivity.this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditImageActivity.this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRewardedVideoCompleted() {
+
             }
 
             @Override
             public void onRewardedVideoAdLoaded() {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditImageActivity.this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
                 if (mRewardedVideoAd.isLoaded()) {
                     mRewardedVideoAd.show();
                 }
@@ -228,12 +233,12 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
             @Override
             public void onRewardedVideoAdOpened() {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EditImageActivity.this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRewardedVideoStarted() {
-                Toast.makeText(EditImageActivity.this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(EditImageActivity.this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -329,27 +334,27 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
     @Override
     public void onAddViewListener(ViewType viewType, int numberOfAddedViews) {
-        Log.d(TAG, "onAddViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
+        //Log.d(TAG, "onAddViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
     }
 
     @Override
     public void onRemoveViewListener(int numberOfAddedViews) {
-        Log.d(TAG, "onRemoveViewListener() called with: numberOfAddedViews = [" + numberOfAddedViews + "]");
+        //Log.d(TAG, "onRemoveViewListener() called with: numberOfAddedViews = [" + numberOfAddedViews + "]");
     }
 
     @Override
     public void onRemoveViewListener(ViewType viewType, int numberOfAddedViews) {
-        Log.d(TAG, "onRemoveViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
+       // Log.d(TAG, "onRemoveViewListener() called with: viewType = [" + viewType + "], numberOfAddedViews = [" + numberOfAddedViews + "]");
     }
 
     @Override
     public void onStartViewChangeListener(ViewType viewType) {
-        Log.d(TAG, "onStartViewChangeListener() called with: viewType = [" + viewType + "]");
+        //Log.d(TAG, "onStartViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
     @Override
     public void onStopViewChangeListener(ViewType viewType) {
-        Log.d(TAG, "onStopViewChangeListener() called with: viewType = [" + viewType + "]");
+        //Log.d(TAG, "onStopViewChangeListener() called with: viewType = [" + viewType + "]");
     }
 
     @Override
@@ -404,9 +409,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
 
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            createDirIfNotExists("/EditedPhotos");
             showLoading("Saving...");
             File file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + ""
+                    + File.separator + "EditedPhotos"+File.separator
                     + System.currentTimeMillis() + ".png");
             try {
                 file.createNewFile();
@@ -716,5 +722,17 @@ try{
         paint.setColor(color);
         canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
         return bitmap;
+    }
+    public  boolean createDirIfNotExists(String path) {
+        boolean ret = true;
+
+        File file = new File(Environment.getExternalStorageDirectory(), path);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e("TravellerLog :: ", "Problem creating Image folder");
+                ret = false;
+            }
+        }
+        return ret;
     }
 }

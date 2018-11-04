@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GetAllRecentFiles">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/showAllRecentFilesView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/margin_110"
+        android:layout_margin="@dimen/margin_5"
+        >
+    </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/textViewNoRecentFiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
+        android:shadowColor="@color/text_shadow_white"
+        android:shadowDx="-2"
+        android:shadowDy="-2"
+        android:shadowRadius="1"
+        android:text="@string/noRecentFiles"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_medium"
+        android:layout_marginTop="60dp"
+        android:visibility="gone"
+        />
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="LARGE_BANNER"
+        ads:adUnitId="@string/banner_home_footer_test">
+
+    </com.google.android.gms.ads.AdView>
+
+</RelativeLayout>

@@ -4,14 +4,20 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="ca-app-pub-6132729436809719~2887920080"/>
+        android:value="@string/admob_app_id" />
+    <!--<meta-data-->
+        <!--android:name="io.fabric.ApiKey"-->
+        <!--android:value="64b073c33ed8ec448a3c377b841074a1d15b65ec" />-->
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -36,28 +42,29 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
             android:name=".EditImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeSplash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".CollageViewActivity"
+        <activity
+            android:name=".CollageViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeSplash"
+            android:theme="@style/AppThemeSplash" />
+        <activity android:name=".GetAllRecentFiles" />
+        <activity android:name=".GalleryActivity"
+            android:theme="@style/AppThemeGallery"
             ></activity>
+
     </application>
 
 </manifest>
